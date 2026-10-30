@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from settings import *
 import binascii
@@ -28,7 +28,7 @@ def forward_packet(data):
 
 
 def handle_packet(data):
-    payload = binascii.hexlify(data)
+    payload = binascii.hexlify(data).decode("ascii")
     logger.debug("Received payload: %s" % payload)
 
     if DGRAM_REGEX.match(payload):
@@ -37,12 +37,12 @@ def handle_packet(data):
         password = search.group(4)
 
         if is_allowed(address, password):
-            logger.debug("Forwarding the packet for %s to %s:%s" % (address, TARGET_ADDRESS, TARGET_PORT))
+            logger.info("Forwarding the packet for %s to %s:%s" % (address, TARGET_ADDRESS, TARGET_PORT))
             forward_packet(data)
         else:
-            logger.debug("This request has been denied because the received password is not correct")
+            logger.info("This request has been denied because the received password is not correct")
     else:
-        logger.debug("Received payload is not valid, ignoring...")
+        logger.info("Received payload is not valid, ignoring...")
 
 
 def start_listener():

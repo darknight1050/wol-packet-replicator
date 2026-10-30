@@ -1,0 +1,15 @@
+name: wol
+
+services:
+  wol:
+    image: python:3.13-alpine
+    container_name: wol
+    working_dir: /mnt/wol
+    command: ["python", "replicator.py"]
+    restart: unless-stopped
+    network_mode: host            # needs the LAN to send the 255.255.255.255 broadcast
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      - ./:/mnt/wol
